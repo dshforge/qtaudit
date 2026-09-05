@@ -25,7 +25,7 @@ worth more than the report.
 6. **Shared library export check**
 7. Third-party dependencies, tests, C++/QML boundary
 8. Risk register, red and amber
-9. Indicative sizing - deliberately with no effort figure
+9. Indicative sizing, with no hours attached
 
 ## The two checks nobody else runs
 
@@ -40,25 +40,21 @@ migration, by measuring, and it does not appear in any API diff.
 exports nothing. We found exactly that in a real project. The tool
 flags it so it is checked with `dumpbin /EXPORTS` before and after.
 
-## The honesty rule built into the output
+## The API count is a floor
 
-Every report states that the API count is a **lower bound, not a
-total**, and says why: an API can be reached without ever naming it.
-`QTextStream::setCodec` takes a `QTextCodec`, so a codebase can depend
-on a removed class while a search for that class returns nothing. We hit
-this ourselves - grep found zero, the compiler found two.
+Every report says so, and says why. An API can be reached without ever
+being named. `QTextStream::setCodec` takes a `QTextCodec`, so a codebase
+can depend on a removed class while a search for that class comes back
+empty. That happened here: grep found zero, the compiler found two.
 
-An audit that implies its number is complete is the inflated precision
-that costs credibility with industrial clients. This one says what it
-cannot see.
+Only a compile against Qt 6 gives you the whole list.
 
-## No effort estimate, on purpose
+## No hours in the output
 
-Section 9 sizes the job but gives no hours. Effort depends on what the
-first compile against Qt 6 reveals, and quoting before that is guessing.
-The recommended next step is a timeboxed trial compile - the smallest
-piece of work that turns the estimate into a plan, and the natural first
-paid engagement.
+Section 9 sizes the job and stops there. What it costs depends on what
+the first Qt 6 compile turns up, so the report asks for a timeboxed
+trial compile instead. That is the smallest thing that turns a guess
+into a plan.
 
 ## Validated against
 
