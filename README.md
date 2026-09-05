@@ -32,29 +32,29 @@ worth more than the report.
 **Encoding.** Qt 6's `qt_standard_project_setup()` passes `/utf-8` to
 MSVC; qmake usually does not. Where a codebase has non-ASCII string
 literals and the current build lacks that flag, moving to CMake changes
-how those literals are interpreted - the program's output changes with
-no corresponding change in application code. We found this in our own
-migration, by measuring, and it does not appear in any API diff.
+how those literals are interpreted, so the program's output changes with
+no corresponding change in application code. It shows up on a byte
+comparison and nowhere in an API diff.
 
 **Exports.** A shared library with no export macros compiles, links, and
-exports nothing. We found exactly that in a real project. The tool
-flags it so it is checked with `dumpbin /EXPORTS` before and after.
+exports nothing, and every stage of the build says it is fine. The tool
+flags the library so it is checked with `dumpbin /EXPORTS` before and after.
 
 ## The API count is a floor
 
-Every report says so, and says why. An API can be reached without ever
-being named. `QTextStream::setCodec` takes a `QTextCodec`, so a codebase
-can depend on a removed class while a search for that class comes back
-empty. That happened here: grep found zero, the compiler found two.
+An API can be reached without ever being named. `QTextStream::setCodec`
+takes a `QTextCodec`, so a codebase can depend on a removed class while a
+search for that class comes back empty: zero hits from grep, two from the
+compiler.
 
-Only a compile against Qt 6 gives you the whole list.
+Which is why every report labels its count a floor, and why the number
+that matters comes from a compile against Qt 6.
 
-## No hours in the output
+## Sizing, not guesswork
 
-Section 9 sizes the job and stops there. What it costs depends on what
-the first Qt 6 compile turns up, so the report asks for a timeboxed
-trial compile instead. That is the smallest thing that turns a guess
-into a plan.
+Section 9 sizes the job against what the first Qt 6 compile turns up,
+and asks for a timeboxed trial compile to get it. That is the smallest
+piece of work that turns an estimate into a plan.
 
 ## Validated against
 
